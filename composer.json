@@ -1,0 +1,25 @@
+{
+    "name": "vitexsoftware/kimai2abraflexi",
+    "description": "Generate invoice from Kimai timesheet",
+    "type": "php-abraflexi",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vítězslav Dvořák",
+            "email": "info@vitexsoftware.cz"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "fiteco-group/kimai-client": "0.2.2",
+        "spojenet/flexibee": "2.0.x-dev",
+        "guzzlehttp/psr7": "2.0.x-dev",
+        "phpoffice/phpspreadsheet": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kimai2AbraFlexi\\": "src/Kimai2AbraFlexi/",
+            "Test\\Kimai2AbraFlexi\\": "testing/src/Kimai2AbraFlexi/"
+        }
+    }
+}

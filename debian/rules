@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_install:
+	dh_install
+	sed -i "s/\.\.\/vendor/\/var\/lib\/abraflexi-kimai-importer/g" debian/abraflexi-kimai-importer/usr/share/abraflexi-kimai-importer/*.php
+

@@ -1,0 +1,6 @@
+bin/*			usr/bin
+src/*.php		usr/share/abraflexi-kimai-importer/
+src/Kimai2AbraFlexi/*.php 	usr/share/abraflexi-kimai-importer/Kimai2AbraFlexi
+debian/composer.json	usr/lib/abraflexi-kimai-importer/
+abraflexi-kimai-importer.svg	/usr/share/icons/hicolor/scalable/apps/
+debian/io.github.vitexsoftware.kimai_to_abraflexi.metainfo.xml	/usr/share/metainfo/

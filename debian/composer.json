@@ -1,0 +1,55 @@
+{
+    "name": "deb/abraflexi-kimai-importer",
+    "description": "issue AbraFlexi invoice using Kimai Time Entries",
+    "type": "project",
+    "version": "0.8",
+    "authors": [
+        {
+            "name": "Vítězslav Dvořák",
+            "email": "info@vitexsoftware.cz"
+        }
+    ],
+    "minimum-stability": "dev",
+    "config": {
+        "vendor-dir": "/var/lib/abraflexi-kimai-importer"
+    },
+    "require": {
+        "fiteco-group/kimai-client": "0.2.2",
+        "deb/abraflexi": "*",
+        "deb/abraflexi-bricks": "*",
+        "guzzlehttp/psr7": "2.0.x-dev",
+        "phpoffice/phpspreadsheet": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kimai2AbraFlexi\\": "/usr/share/abraflexi-kimai-importer/Kimai2AbraFlexi/"
+        }
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "/usr/share/php/EaseCore"
+        },
+        {
+            "type": "path",
+            "url": "/usr/share/php/EaseHtml/"
+        },
+        {
+            "type": "path",
+            "url": "/usr/share/php/AbraFlexi"
+        },
+        {
+            "type": "path",
+            "url": "/usr/share/php/EaseBricks"
+        },
+        {
+            "type": "path",
+            "url": "/usr/share/php/AbraFlexiBricks/"
+        },
+
+        {
+            "type": "path",
+            "url": "/usr/share/php/EaseTWB4"
+        }
+    ]
+}
