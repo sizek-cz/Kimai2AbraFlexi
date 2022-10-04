@@ -28,6 +28,9 @@ class FakturaVydana extends \AbraFlexi\FakturaVydana {
         if (!array_key_exists('typDokl', $options)) {
             $this->setDataValue('typDokl', self::code(\Ease\Functions::cfg('ABRAFLEXI_TYP_FAKTURY')));
         }
+        if(\Ease\Functions::cfg('ABRAFLEXI_SEND') == 'True'){
+            $this->setDataValue('stavMailK','stavMail.odeslat');
+        }
         $this->cenik = new \AbraFlexi\Cenik();
     }
 

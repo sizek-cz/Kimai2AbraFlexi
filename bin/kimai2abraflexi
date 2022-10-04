@@ -1,4 +1,4 @@
 #!/bin/bash
-php -f /usr/share/abraflexi-kimai-importer/KimaiToAbraFlexi.php
+php -f /usr/share/abraflexi-kimai-importer/kimaiToAbraFlexi.php
 
 

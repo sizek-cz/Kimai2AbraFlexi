@@ -18,7 +18,9 @@ Configuration
 Example environment or .env file contents:
 
 ```
-KIMAI_WORKSPACE=123455,12212121
+KIMAI_HOST=your.server.com
+KIMAI_USER=user.login
+KIMAI_TOKEN=xxxxxx
 KIMAI_SCOPE=last_month
 
 ABRAFLEXI_URL="https://demo.abraflexi.eu:5434"
@@ -28,6 +30,7 @@ ABRAFLEXI_COMPANY="demo"
 ABRAFLEXI_CUSTOMER="DEMO"
 ABRAFLEXI_TYP_FAKTURY="FAKTURA"
 ABRAFLEXI_CENIK="WORK"
+ABRAFLEXI_SEND=True
 ABRAFLEXI_CC=some@recipient.com                 - into "poznam" field (abraflexi-mailer can handle it)
 INVOICE_DOWNLOAD=true                           - into "reports" directory
 
