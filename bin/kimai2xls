@@ -1,0 +1,5 @@
+#!/bin/bash
+php -f /usr/share/abraflexi-kimai-importer/KimaiToXLS.php
+
+
+

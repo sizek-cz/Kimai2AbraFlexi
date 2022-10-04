@@ -57,6 +57,10 @@ class Importer extends FakturaVydana {
      * @var \Fiteco\KimaiClient\Api\TimesheetApi
      */
     private $kimaiTimesheets;
+    private $customers;
+    private $kimaiProjects;
+    private $workspaces;
+    private $kimaiCustomers;
 
     /**
      * 
@@ -204,6 +208,7 @@ class Importer extends FakturaVydana {
             'typDokl' => RO::code(empty(Functions::cfg('ABRAFLEXI_TYP_FAKTURY')) ? 'FAKTURA' : Functions::cfg('ABRAFLEXI_TYP_FAKTURY')),
             'firma' => RO::code(Functions::cfg('ABRAFLEXI_CUSTOMER')),
             'popis' => sprintf(_('Work from %s to %s'), $this->since->format('Y-m-d'), $this->until->format('Y-m-d')),
+            'duzpPuv' =>  RO::dateToFlexiDate($this->until) 
         ]);
 
         $created = $this->sync();
@@ -290,7 +295,7 @@ class Importer extends FakturaVydana {
         foreach ($this->workspaces as $wsname => $workspace) {
             $this->addStatusMessage('Workspace: ' . (is_string($wsname) ? $wsname . ' ' : '' ) . $workspace, 'info');
 
-            $detailsData = $this->getAllDetailPages($workspace);
+            $detailsData = $this->getAllDetailPages();
 
             foreach ($detailsData['data'] as $detail) {
                 $entries++;

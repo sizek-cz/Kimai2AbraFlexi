@@ -85,6 +85,7 @@ class Reporter {
      * @return string
      */
     public static function cvsReportPerProject($timeEntries) {
+        $csvRows = [];
         $columns = ['project', 'hours', 'duration'];
         $reportData[] = array_combine($columns, $columns);
         foreach ($timeEntries as $projectName => $projectTimeEntries) {

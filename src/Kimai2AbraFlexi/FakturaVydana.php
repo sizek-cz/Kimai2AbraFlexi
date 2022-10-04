@@ -8,9 +8,15 @@ use Ease\Shared;
  * KimaiToAbraFlexi - Invoice Handler.
  *
  * @author Vítězslav Dvořák <info@vitexsoftware.cz>
- * @copyright  2021 Vitex Software
+ * @copyright  2021-2022 Vitex Software
  */
 class FakturaVydana extends \AbraFlexi\FakturaVydana {
+
+    /**
+     * 
+     * @var \AbraFlexi\Cenik
+     */
+    private $cenik;
 
     /**
      * AbraFlexi Invoice
@@ -22,6 +28,7 @@ class FakturaVydana extends \AbraFlexi\FakturaVydana {
         if (!array_key_exists('typDokl', $options)) {
             $this->setDataValue('typDokl', self::code(\Ease\Functions::cfg('ABRAFLEXI_TYP_FAKTURY')));
         }
+        $this->cenik = new \AbraFlexi\Cenik();
     }
 
     /**
@@ -61,13 +68,13 @@ class FakturaVydana extends \AbraFlexi\FakturaVydana {
         $time = sprintf($format, $hours, $mins, $secs);
         return rtrim($time, '0');
     }
-    
-    
+
     /**
      * 
      * @param array $timeEntries
      */
     public function takeItemsFromArray($timeEntries) {
+        $prices = $this->cenik->getColumnsFromAbraFlexi(['nazev','kod'], ['limit' => 0], 'nazev');
         foreach ($timeEntries as $projectName => $projectTimeEntries) {
             $projectSum = _('Project') . ': ' . $projectName . ' ' . _('Duration') . ': ' . round(array_sum($projectTimeEntries) / 3600, 3) . ' h';
             $this->addArrayToBranch(['typPolozkyK' => 'typPolozky.text', 'nazev' => $projectSum], 'polozkyFaktury'); // Task Title as Heading/TextRow
@@ -77,7 +84,7 @@ class FakturaVydana extends \AbraFlexi\FakturaVydana {
                     'typPolozkyK' => 'typPolozky.katalog',
                     'nazev' => self::formatSeconds($duration) . ' ' . $nazev,
                     'mnozMj' => round($duration / 3600, 3),
-                    'cenik' => self::code(Shared::instanced()->getConfigValue('ABRAFLEXI_CENIK'))];
+                    'cenik' => array_key_exists($projectName, $prices) ? self::code($prices[$projectName]['kod']) : self::code(Shared::instanced()->getConfigValue('ABRAFLEXI_CENIK'))];
 
                 $this->addArrayToBranch($taskData, 'polozkyFaktury');
             }

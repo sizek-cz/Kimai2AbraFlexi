@@ -12,8 +12,8 @@
     "minimum-stability": "dev",
     "require": {
         "fiteco-group/kimai-client": "0.2.2",
-        "spojenet/flexibee": "2.0.x-dev",
-        "guzzlehttp/psr7": "2.0.x-dev",
+        "spojenet/flexibee": "main-dev",
+        "guzzlehttp/psr7": "*",
         "phpoffice/phpspreadsheet": "dev-master"
     },
     "autoload": {
