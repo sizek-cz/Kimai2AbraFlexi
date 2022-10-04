@@ -16,7 +16,7 @@
     "require": {
         "fiteco-group/kimai-client": "0.2.2",
         "deb/abraflexi": "*",
-        "guzzlehttp/psr7": "2.0.x-dev",
+        "guzzlehttp/psr7": "*",
         "phpoffice/phpspreadsheet": "*"
     },
     "autoload": {
