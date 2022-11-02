@@ -70,7 +70,7 @@ class Importer extends FakturaVydana {
     public function __construct($init = null, $options = []) {
         $this->defaultUrlParams;
         parent::__construct($init, $options);
-        $this->scopeToInterval(Functions::cfg('KIMAI_SCOPE'));
+        $this->scopeToInterval(Functions::cfg('KIMAI_SCOPE','last_month'));
         $this->config = \Fiteco\KimaiClient\Configuration::getDefaultConfiguration()->setHost(Functions::cfg('KIMAI_HOST'))->setApiKey('X-AUTH-USER', Functions::cfg('KIMAI_USER'))->setApiKey('X-AUTH-TOKEN', Functions::cfg('KIMAI_TOKEN'));
 
         $this->kimaiTimesheets = new \Fiteco\KimaiClient\Api\TimesheetApi(new \GuzzleHttp\Client(), $this->config);

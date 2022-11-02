@@ -17,12 +17,33 @@ if (file_exists(dirname(__DIR__) . '/.env')) {
 
 new \Ease\Locale('cs_CZ', '../i18n', 'kimai-to-abraflexi');
 
-define('EASE_LOOGER', 'console|syslog');
+$cfgKeys = [
+    'ABRAFLEXI_URL',
+    'ABRAFLEXI_LOGIN',
+    'ABRAFLEXI_PASSWORD',
+    'ABRAFLEXI_COMPANY',
+    'ABRAFLEXI_CUSTOMER',
+    'ABRAFLEXI_TYP_FAKTURY',
+    'KIMAI_HOST',
+    'KIMAI_USER',
+    'KIMAI_TOKEN'
+];
+
+$configured = true;
+foreach ($cfgKeys as $cfgKey) {
+    if (empty(\Ease\Functions::cfg($cfgKey))) {
+        echo 'Requied configuration ' . $cfgKey . " is not set.\n";
+        $configured = false;
+    }
+}
+if ($configured === false) {
+    exit(1);
+}
 
 $engine = new Importer();
 $engine->import();
 
-if (\Ease\Functions::cfg('INVOICE_DOWNLOAD')) {
+if (\Ease\Functions::cfg('INVOICE_DOWNLOAD') && \Ease\Functions::cfg('REPORTS_DIR')) {
     $engine->addStatusMessage(sprintf(_('Invoice saved as %s'), $engine->downloadInFormat('pdf', \Ease\Functions::cfg('REPORTS_DIR'))));
     $engine->addStatusMessage(sprintf(_('Invoice saved as %s'), $engine->downloadInFormat('isdocx', \Ease\Functions::cfg('REPORTS_DIR'))));
 }
