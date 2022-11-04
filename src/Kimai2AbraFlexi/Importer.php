@@ -70,7 +70,7 @@ class Importer extends FakturaVydana {
     public function __construct($init = null, $options = []) {
         $this->defaultUrlParams;
         parent::__construct($init, $options);
-        $this->scopeToInterval(Functions::cfg('KIMAI_SCOPE','last_month'));
+        $this->scopeToInterval(Functions::cfg('KIMAI_SCOPE', 'last_month'));
         $this->config = \Fiteco\KimaiClient\Configuration::getDefaultConfiguration()->setHost(Functions::cfg('KIMAI_HOST'))->setApiKey('X-AUTH-USER', Functions::cfg('KIMAI_USER'))->setApiKey('X-AUTH-TOKEN', Functions::cfg('KIMAI_TOKEN'));
 
         $this->kimaiTimesheets = new \Fiteco\KimaiClient\Api\TimesheetApi(new \GuzzleHttp\Client(), $this->config);
@@ -79,34 +79,45 @@ class Importer extends FakturaVydana {
         $this->projects = $this->getProjects();
     }
 
+    /**
+     * Obtain Projects
+     * 
+     * @return array 
+     */
     public function getProjects() {
         $projects = [];
         $this->kimaiProjects = new \Fiteco\KimaiClient\Api\ProjectApi(new \GuzzleHttp\Client(), $this->config);
         try {
             $projectsRaw = $this->kimaiProjects->apiProjectsGet(null, null, null, $this->since, $this->until);
+
+            foreach ($projectsRaw as $projectRaw) {
+                $projects[$projectRaw->getId()]['name'] = $projectRaw->getName();
+                $projects[$projectRaw->getId()]['cust'] = $projectRaw->getCustomer();
+            }
         } catch (Exception $e) {
             echo 'Exception when calling ProjectApi->apiProjectsGet: ', $e->getMessage(), PHP_EOL;
         }
 
-        foreach ($projectsRaw as $projectRaw) {
-            $projects[$projectRaw->getId()]['name'] = $projectRaw->getName();
-            $projects[$projectRaw->getId()]['cust'] = $projectRaw->getCustomer();
-        }
         return $projects;
     }
 
+    /**
+     * Obtain Customers
+     * 
+     * @return array
+     */
     public function getCustomers() {
         $customers = [];
         $this->kimaiCustomers = new \Fiteco\KimaiClient\Api\CustomerApi(new \GuzzleHttp\Client(), $this->config);
         try {
             $customersRaw = $this->kimaiCustomers->apiCustomersGet();
+            foreach ($customersRaw as $customerRaw) {
+                $customers[$customerRaw->getId()] = $customerRaw->getName();
+            }
         } catch (Exception $e) {
             echo 'Exception when calling CustomerApi->apiCustomersGet: ', $e->getMessage(), PHP_EOL;
         }
 
-        foreach ($customersRaw as $customerRaw) {
-            $customers[$customerRaw->getId()] = $customerRaw->getName();
-        }
         return $customers;
     }
 
@@ -208,7 +219,7 @@ class Importer extends FakturaVydana {
             'typDokl' => RO::code(empty(Functions::cfg('ABRAFLEXI_TYP_FAKTURY')) ? 'FAKTURA' : Functions::cfg('ABRAFLEXI_TYP_FAKTURY')),
             'firma' => RO::code(Functions::cfg('ABRAFLEXI_CUSTOMER')),
             'popis' => sprintf(_('Work from %s to %s'), $this->since->format('Y-m-d'), $this->until->format('Y-m-d')),
-            'duzpPuv' =>  RO::dateToFlexiDate($this->until) 
+            'duzpPuv' => RO::dateToFlexiDate($this->until)
         ]);
 
         $created = $this->sync();
@@ -235,15 +246,15 @@ class Importer extends FakturaVydana {
         $records = [];
         try {
             $recordsRaw = $this->kimaiTimesheets->apiTimesheetsGet(null, null, null, null, null, null, null, $pageno, 100, null, null, null, $this->since, $this->until);
+            foreach ($recordsRaw as $recordRaw) {
+                $records[$recordRaw->getId()]['activity'] = $recordRaw->getActivity();
+                $records[$recordRaw->getId()]['description'] = $recordRaw->getDescription();
+                $records[$recordRaw->getId()]['project'] = $this->projects[$recordRaw->getProject()]['name'];
+                $records[$recordRaw->getId()]['customer'] = $this->customers[$this->projects[$recordRaw->getProject()]['cust']];
+                $records[$recordRaw->getId()]['duration'] = $recordRaw->getDuration();
+            }
         } catch (Exception $e) {
             echo 'Exception when calling TimesheetApi->apiTimesheetsGet: ', $e->getMessage(), PHP_EOL;
-        }
-        foreach ($recordsRaw as $recordRaw) {
-            $records[$recordRaw->getId()]['activity'] = $recordRaw->getActivity();
-            $records[$recordRaw->getId()]['description'] = $recordRaw->getDescription();
-            $records[$recordRaw->getId()]['project'] = $this->projects[$recordRaw->getProject()]['name'];
-            $records[$recordRaw->getId()]['customer'] = $this->customers[$this->projects[$recordRaw->getProject()]['cust']];
-            $records[$recordRaw->getId()]['duration'] = $recordRaw->getDuration();
         }
         return $records;
     }

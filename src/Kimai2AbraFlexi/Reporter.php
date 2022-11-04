@@ -129,7 +129,7 @@ class Reporter {
 
     /**
      * 
-     * @param type $spreadsheet
+     * @param string $spreadsheet
      * 
      * @return string
      */
