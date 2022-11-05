@@ -222,16 +222,21 @@ class Importer extends FakturaVydana {
             'duzpPuv' => RO::dateToFlexiDate($this->until)
         ]);
 
-        $created = $this->sync();
+        try {
+            $created = $this->sync();
+            $fromto = $this->since->format('Y-m-d') . '_' . $this->until->format('Y-m-d');
 
-        $fromto = $this->since->format('Y-m-d') . '_' . $this->until->format('Y-m-d');
-        Priloha::addAttachment($this, sprintf(_('tasks_timesheet_%s.csv'), $fromto), Reporter::csvReport($invoiceItems), 'text/csv');
-        Priloha::addAttachment($this, sprintf(_('projects_timesheet_%s.csv'), $fromto), Reporter::cvsReportPerProject($invoiceItems), 'text/csv');
+            Priloha::addAttachment($this, sprintf(_('tasks_timesheet_%s.csv'), $fromto), Reporter::csvReport($invoiceItems), 'text/csv');
+            Priloha::addAttachment($this, sprintf(_('projects_timesheet_%s.csv'), $fromto), Reporter::cvsReportPerProject($invoiceItems), 'text/csv');
 
-        Priloha::addAttachment($this, sprintf(_('tasks_timesheet_%s.xlsx'), $fromto), Reporter::xlsReport($invoiceItems, $fromto), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        Priloha::addAttachment($this, sprintf(_('projects_timesheet_%s.xlsx'), $fromto), Reporter::xlsReportPerProject($invoiceItems, $fromto), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            Priloha::addAttachment($this, sprintf(_('tasks_timesheet_%s.xlsx'), $fromto), Reporter::xlsReport($invoiceItems, $fromto), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            Priloha::addAttachment($this, sprintf(_('projects_timesheet_%s.xlsx'), $fromto), Reporter::xlsReportPerProject($invoiceItems, $fromto), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
-        $this->addStatusMessage($this->getDataValue('kod') . ': ' . $this->getApiUrl(), $created ? 'success' : 'danger');
+            $this->addStatusMessage($this->getDataValue('kod') . ': ' . $this->getApiUrl(), $created ? 'success' : 'danger');
+        } catch (\AbraFleix\Exception $exc) {
+            $created = false;
+        }
+
         return $created;
     }
 

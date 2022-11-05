@@ -4,13 +4,14 @@
  * KimaiToAbraFlexi - AppInit.
  *
  * @author Vítězslav Dvořák <info@vitexsoftware.cz>
- * @copyright  2021 Vitex Software
+ * @copyright  2021-2022 Vitex Software
  */
 
 namespace Kimai2AbraFlexi;
 
 require_once '../vendor/autoload.php';
 
+define('APP_NAME','Kimai2AbraFlexi');
 if (file_exists(dirname(__DIR__) . '/.env')) {
     \Ease\Shared::instanced()->loadConfig(dirname(__DIR__) . '/.env', true);
 }
@@ -32,7 +33,7 @@ $cfgKeys = [
 $configured = true;
 foreach ($cfgKeys as $cfgKey) {
     if (empty(\Ease\Functions::cfg($cfgKey))) {
-        echo 'Requied configuration ' . $cfgKey . " is not set.\n";
+        fwrite(STDERR, 'Requied configuration ' . $cfgKey . " is not set." . PHP_EOL);
         $configured = false;
     }
 }

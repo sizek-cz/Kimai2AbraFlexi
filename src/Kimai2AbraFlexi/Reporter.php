@@ -153,7 +153,7 @@ class Reporter {
     public static function spreadSheat($title, $fromto) {
         $spreadsheet = new Spreadsheet();
         $spreadsheet->getProperties()
-                ->setCreator(Functions::cfg('APP_NAME'))
+                ->setCreator(\Ease\Shared::appName())
                 ->setTitle($title)
                 ->setSubject("Timesheet report " . $fromto)
                 ->setDescription("Timesheet report " . $fromto)
